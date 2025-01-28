@@ -1,9 +1,7 @@
 const express = require('express');
-const mysql = require('mysql');
-const bodyParser = require('body-parser');
-
+const mysql = require('mysql2');
 const app = express();
-app.use(bodyParser.json());
+app.use(express.json());
 
 // MySQL Database Connection
 const db = mysql.createConnection({
@@ -11,6 +9,7 @@ const db = mysql.createConnection({
     user: 'root',
     password: 'yourpassword',
     database: 'solecheck_db',
+    port: 3306 // Ensure MySQL connection uses port 3306
 });
 
 db.connect((err) => {
@@ -46,6 +45,19 @@ app.post('/verify', (req, res) => {
 
 // Start the server
 const PORT = 3000;
-app.listen(PORT, () => {
+app.listen(PORT, 'localhost', () => {
     console.log(`Server running on http://localhost:${PORT}`);
+});
+
+// Handle graceful shutdown
+process.on('SIGINT', () => {
+    console.log('Shutting down server...');
+    db.end((err) => {
+        if (err) {
+            console.error('Error during database disconnection:', err);
+        } else {
+            console.log('Database connection closed.');
+        }
+        process.exit(0);
+    });
 });
