@@ -1,0 +1,25 @@
+CREATE DATABASE SoleCheckDB;
+
+USE SoleCheckDB;
+
+CREATE TABLE ShoeBrands (
+    BrandID INT PRIMARY KEY AUTO_INCREMENT,
+    BrandName VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Shoes (
+    ShoeID INT PRIMARY KEY AUTO_INCREMENT,
+    BrandID INT,
+    ModelName VARCHAR(100) NOT NULL,
+    MfgDate DATE NOT NULL,
+    AuthCode VARCHAR(50) NOT NULL,
+    FOREIGN KEY (BrandID) REFERENCES ShoeBrands(BrandID)
+);
+
+CREATE TABLE ShoeAuthentications (
+    AuthID INT PRIMARY KEY AUTO_INCREMENT,
+    ShoeID INT,
+    AuthCode VARCHAR(50) NOT NULL,
+    AuthDate DATE NOT NULL,
+    FOREIGN KEY (ShoeID) REFERENCES Shoes(ShoeID)
+);
